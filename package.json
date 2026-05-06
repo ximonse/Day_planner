@@ -9,7 +9,9 @@
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+		"test": "vitest",
+		"test:watch": "vitest --watch"
 	},
 	"devDependencies": {
 		"@sveltejs/adapter-vercel": "^6.3.3",
@@ -17,11 +19,12 @@
 		"@sveltejs/vite-plugin-svelte": "^7.0.0",
 		"@testing-library/jest-dom": "^6.1.5",
 		"@testing-library/svelte": "^4.0.5",
+		"@types/node": "^25.6.0",
 		"jsdom": "^23.0.1",
 		"svelte": "^5.55.2",
 		"svelte-check": "^4.4.6",
 		"typescript": "^6.0.2",
 		"vite": "^8.0.7",
-		"vitest": "^1.0.4"
+		"vitest": "^4.1.5"
 	}
 }
