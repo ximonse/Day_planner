@@ -43,17 +43,19 @@ class State {
     if (saved.showAgenda  != null) this.showAgenda  = saved.showAgenda;
     if (saved.showEditor  != null) this.showEditor  = saved.showEditor;
 
-    $effect(() => {
-      if (!browser) return;
-      localStorage.setItem(KEY, JSON.stringify({
-        palette: this.palette,
-        dark: this.dark,
-        source: this.source,
-        clockMode: this.clockMode,
-        showSidebar: this.showSidebar,
-        showAgenda: this.showAgenda,
-        showEditor: this.showEditor,
-      }));
+    $effect.root(() => {
+      $effect(() => {
+        if (!browser) return;
+        localStorage.setItem(KEY, JSON.stringify({
+          palette: this.palette,
+          dark: this.dark,
+          source: this.source,
+          clockMode: this.clockMode,
+          showSidebar: this.showSidebar,
+          showAgenda: this.showAgenda,
+          showEditor: this.showEditor,
+        }));
+      });
     });
   }
 }
