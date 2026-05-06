@@ -29,7 +29,7 @@
   }
 </script>
 
-<svg viewBox="0 0 400 400" width="400" height="400">
+<svg class="clock" viewBox="0 0 400 400">
   <circle cx={CX} cy={CY} r={R} fill={theme.bg} />
 
   {#each parts as part, i}
@@ -44,34 +44,36 @@
     {:else}
       <path d={arcPath(CX, CY, R, Ri, a0(i), a1(i))} fill={color} />
     {/if}
-
-    <!-- Chip-etikett — ingen SVG-filter (CleverTouch-säker) -->
-    {@const mid = (a0(i) + a1(i)) / 2}
-    {@const lp = degreesToPoint(CX, CY, (R + Ri) / 2, mid)}
-    <rect x={lp.x - 38} y={lp.y - 11} width={76} height={22} rx={4} fill={theme.chip} />
-    <text x={lp.x} y={lp.y + 5} text-anchor="middle" font-size="11" fill={color} font-weight="600">
-      {part.title} {part.minutes}m
-    </text>
   {/each}
 
   <!-- Donut-hål -->
   <circle cx={CX} cy={CY} r={Ri} fill={theme.bg} />
 
-  <!-- Centrertext -->
-  <text x={CX} y={CY - 8} text-anchor="middle" font-size="28" fill={theme.centerMain} font-weight="300">
-    {fmt(now)}
-  </text>
+  <!-- Centrertext: slutar HH:MM -->
   {#if active}
-    <text x={CX} y={CY + 16} text-anchor="middle" font-size="12" fill={theme.centerMuted}>
-      slutar {fmt(active.endMin)}
-    </text>
+    <text x={CX} y={CY - 8} text-anchor="middle" font-size="11" fill={theme.centerMuted}>slutar</text>
+    <text x={CX} y={CY + 12} text-anchor="middle" font-size="20" font-weight="200"
+      letter-spacing="-0.5" fill={theme.centerMain}>{fmt(active.endMin)}</text>
   {/if}
+
+  <!-- Chip-etiketter -->
+  {#each parts as part, i}
+    {@const color = colors[i % colors.length]}
+    {@const mid = (a0(i) + a1(i)) / 2}
+    {@const lp = degreesToPoint(CX, CY, (R + Ri) / 2, mid)}
+    <rect x={lp.x - 38} y={lp.y - 11} width={76} height={22} rx={3}
+      fill={theme.chip} stroke={color} stroke-width="1" opacity="0.95" />
+    <text x={lp.x} y={lp.y + 5} text-anchor="middle" dominant-baseline="middle"
+      font-size="11" fill={color} font-weight="600" pointer-events="none">
+      {part.title} {part.minutes}m
+    </text>
+  {/each}
 
   <!-- Visare -->
   <path d={hPath} fill={theme.handDark} opacity="0.9" />
   <path d={hPath} fill={theme.handLight} opacity="0.3" />
 
-  <!-- Tickmärken: vit halo + markfärg ovanpå — inga SVG-filter -->
+  <!-- Tickmärken: vit halo + markfärg ovanpå -->
   {#each { length: 60 } as _, i}
     {@const deg = i * 6}
     {@const major = i % 5 === 0}
@@ -83,3 +85,14 @@
       stroke={theme.mark} stroke-width={major ? 2 : 1} />
   {/each}
 </svg>
+
+<style>
+  .clock {
+    display: block;
+    user-select: none;
+    touch-action: none;
+    overflow: visible;
+    width: min(85vh, calc(100vw - 320px - 220px));
+    height: min(85vh, calc(100vw - 320px - 220px));
+  }
+</style>

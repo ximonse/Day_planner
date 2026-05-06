@@ -16,13 +16,12 @@
 </script>
 
 <div class="main">
-  {#if appState.showSidebar}<Sidebar />{/if}
+  <Sidebar />
   <div class="center">
     <Clock />
     <div class="toolbar">
-      <button class="icon" onclick={() => appState.showSidebar = !appState.showSidebar} title="Lista">⚙︎</button>
-      <button class="icon" onclick={() => appState.showEditor  = !appState.showEditor}  title="Redigera">⚒︎</button>
-      <button class="icon" onclick={() => appState.showAgenda  = !appState.showAgenda}  title="Agenda">ⓘ</button>
+      <button class="icon" onclick={() => appState.showEditor = !appState.showEditor} title="Redigera">⚒︎</button>
+      <button class="icon" onclick={() => appState.showAgenda = !appState.showAgenda} title="Agenda">ⓘ</button>
     </div>
   </div>
   {#if appState.showAgenda}<Agenda />{/if}
@@ -46,7 +45,7 @@
 
 <style>
   .main   { flex:1; display:flex; }
-  .center { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:8px; }
+  .center { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:16px 16px; gap:8px; position:relative; }
 
   .toolbar {
     display: flex; align-items: center; gap: 8px;

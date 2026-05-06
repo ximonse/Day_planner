@@ -3,7 +3,7 @@
   import { SECTOR_COLORS } from '$lib/theme';
   import { nowMinutes } from '$lib/clock/geometry';
 
-  let now    = $state(nowMinutes());
+  let now = $state(nowMinutes());
   $effect(() => {
     const id = setInterval(() => { now = nowMinutes(); }, 1000);
     return () => clearInterval(id);
@@ -30,52 +30,104 @@
     const el = listEl.children[activeIdx] as HTMLElement | undefined;
     el?.scrollIntoView({ block: 'center', behavior: 'smooth' });
   });
-
-  let collapsed = $state(false);
 </script>
 
-<aside class="sidebar" class:collapsed>
-  <button class="collapse-btn" onclick={() => collapsed = !collapsed}>
-    {collapsed ? '›' : '‹'}
+<aside class="sidebar" class:collapsed={!appState.showSidebar}>
+  <button
+    class="collapse-btn"
+    onclick={() => appState.showSidebar = !appState.showSidebar}
+  >
+    {appState.showSidebar ? '‹' : '›'}
   </button>
-  {#if !collapsed}
-    {#if active}
-      <div class="block-title">{active.title}</div>
-    {/if}
-    <ul class="list" bind:this={listEl}>
-      {#each parts as part, i}
-        {@const s = status(i)}
-        {@const color = colors[i % colors.length]}
-        <li class="part {s}">
-          <span class="dot" style="background:{color}"></span>
-          <span class="name">{part.title}</span>
-          <span class="mins">{part.minutes}m</span>
-          {#if part.note}<div class="note">{part.note}</div>{/if}
-        </li>
-      {/each}
-    </ul>
+
+  {#if active}
+    <h3>{active.title}</h3>
   {/if}
+
+  <div class="seglist" bind:this={listEl}>
+    {#each parts as part, i}
+      {@const s = status(i)}
+      {@const color = colors[i % colors.length]}
+      <div class="row {s}">
+        <span class="dot" style="background:{color}"></span>
+        <span class="name">{part.title}</span>
+        <span class="min">{part.minutes}m</span>
+      </div>
+      {#if part.note}
+        <div class="note">{part.note}</div>
+      {/if}
+    {/each}
+  </div>
 </aside>
 
 <style>
-  .sidebar { position: relative; width:220px; padding:16px 12px; background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; gap:8px; overflow:visible; }
-  .sidebar.collapsed { width: 28px; min-width: 28px; padding: 8px 0; }
-  .collapse-btn {
-    position: absolute; right: -12px; top: 50%;
-    transform: translateY(-50%);
-    background: var(--panel); border: 1px solid var(--border);
-    border-radius: 50%; width: 24px; height: 24px;
-    cursor: pointer; font-size: 0.9rem; color: var(--fg);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 5;
+  .sidebar {
+    width: max-content;
+    min-width: 320px;
+    max-width: 380px;
+    background: var(--panel);
+    border-right: 1px solid var(--border);
+    padding: 20px 16px;
+    position: relative;
+    transition: margin-left .25s ease;
+    overflow-y: auto;
+    flex-shrink: 0;
   }
-  .block-title { font-size:1rem; font-weight:600; padding-bottom:8px; border-bottom:1px solid var(--border); }
-  .list { list-style:none; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:4px; max-height: calc(100vh - 80px); }
-  .part { display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; }
-  .part.past    { opacity:0.35; }
-  .part.active  { background:var(--pill); font-weight:600; }
-  .dot  { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
-  .name { flex:1; font-size:0.9rem; }
-  .mins { font-size:0.8rem; color:var(--muted); }
-  .note { font-size:0.75rem; color:var(--muted); padding-left:18px; width:100%; }
+  .sidebar.collapsed {
+    margin-left: calc(-1 * var(--sb-w, 320px));
+  }
+
+  .collapse-btn {
+    position: fixed;
+    top: 50%;
+    left: calc(var(--sb-w, 320px) - 14px);
+    transform: translateY(-50%);
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: var(--panel); color: var(--fg);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; font-weight: 600;
+    z-index: 50;
+    transition: left .25s ease;
+  }
+  .sidebar.collapsed .collapse-btn {
+    left: 8px;
+  }
+
+  h3 {
+    margin: 0 0 18px;
+    font-size: 50px;
+    color: var(--fg);
+    font-weight: 800;
+    text-transform: none;
+    letter-spacing: -1px;
+    padding: 0 10px;
+    line-height: 1;
+  }
+
+  .seglist {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    font-size: 48px;
+    font-weight: 400;
+    line-height: 1.05;
+  }
+  .row.active { background: var(--pill); font-weight: 500; }
+  .row.past   { opacity: .45; }
+
+  .dot  { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; }
+  .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .min  { color: var(--muted); font-variant-numeric: tabular-nums; font-size: 32px; font-weight: 500; min-width: 6ch; text-align: right; flex-shrink: 0; }
+  .note { color: var(--muted); font-size: 22px; line-height: 1.2; padding: 0 12px 8px 50px; white-space: pre-wrap; }
 </style>
