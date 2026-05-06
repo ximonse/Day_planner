@@ -8,8 +8,8 @@
       class="editor"
       bind:value={appState.source}
       spellcheck="false"
-      autocomplete="off"
       placeholder="Skriv din dagsplan..."
+      {...{ autocorrect: 'off' }}
     ></textarea>
   </div>
 {/if}

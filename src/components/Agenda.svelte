@@ -31,7 +31,7 @@
       {@const st    = status(block.startMin, block.endMin)}
       <div class="row {st}" style="height:{h}px; border-left:3px solid {color}">
         <span class="time">{fmt(block.startMin)}</span>
-        <span class="title" style="color:{color}">{block.title}</span>
+        <span class="title" style={st === 'active' ? '' : `color:${color}`}>{block.title}</span>
         <span class="dur">{block.endMin - block.startMin}m</span>
       </div>
     {/each}
@@ -44,7 +44,7 @@
   .timeline { display:flex; flex-direction:column; gap:2px; }
   .row      { display:flex; flex-direction:column; justify-content:center; padding:4px 8px; border-radius:0 4px 4px 0; background:var(--pill); }
   .row.past    { opacity:0.4; }
-  .row.active  { background:var(--pill-on); }
+  .row.active  { background:var(--pill-on); color:var(--pill-on-fg); }
   .time  { font-size:0.7rem; color:var(--muted); }
   .title { font-size:0.85rem; font-weight:600; }
   .dur   { font-size:0.7rem; color:var(--muted); }

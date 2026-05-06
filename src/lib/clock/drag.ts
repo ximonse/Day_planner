@@ -1,6 +1,9 @@
 import type { Block } from '../types';
 import { CX, CY } from './geometry';
 
+// Drag wiring (connecting these functions to SVG pointer events in Clock1h/Clock12h)
+// is scheduled for Fas 2.
+
 function pointerAngle(e: PointerEvent, el: SVGElement): number {
   const rect = el.getBoundingClientRect();
   const scaleX = 400 / rect.width;
@@ -74,10 +77,11 @@ export function make12hDrag(
   function move(e: PointerEvent, svgEl: SVGElement) {
     if (!dragging) return;
     const deg = pointerAngle(e, svgEl);
-    const nowH = Math.floor(Date.now() / 60000) % 720; // approximate hour base
+    const nowMinutes = Math.floor(Date.now() / 60000) % 1440;
+    const windowBase = Math.floor(nowMinutes / 720) * 720;
     const minsPast12h = (deg / 360) * 720;
     const { boundaryIdx } = dragging;
-    const newTime = Math.round(minsPast12h / 5) * 5; // snap to 5min
+    const newTime = Math.round((windowBase + minsPast12h) / 5) * 5; // snap to 5min
 
     const prev = blocks[boundaryIdx];
     const next = blocks[boundaryIdx + 1];
