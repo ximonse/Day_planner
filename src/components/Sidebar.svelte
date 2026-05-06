@@ -58,7 +58,7 @@
 </aside>
 
 <style>
-  .sidebar { position: relative; width:220px; padding:16px 12px; background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; gap:8px; overflow:hidden; }
+  .sidebar { position: relative; width:220px; padding:16px 12px; background:var(--panel); border-right:1px solid var(--border); display:flex; flex-direction:column; gap:8px; overflow:visible; }
   .sidebar.collapsed { width: 28px; min-width: 28px; padding: 8px 0; }
   .collapse-btn {
     position: absolute; right: -12px; top: 50%;
@@ -70,7 +70,7 @@
     z-index: 5;
   }
   .block-title { font-size:1rem; font-weight:600; padding-bottom:8px; border-bottom:1px solid var(--border); }
-  .list { list-style:none; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:4px; }
+  .list { list-style:none; overflow-y:auto; flex:1; display:flex; flex-direction:column; gap:4px; max-height: calc(100vh - 80px); }
   .part { display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; }
   .part.past    { opacity:0.35; }
   .part.active  { background:var(--pill); font-weight:600; }

@@ -20,10 +20,12 @@
   <div class="center">
     <Clock />
     <div class="toolbar">
+      <button class="icon-btn" class:on={appState.showSidebar}
+        onclick={() => appState.showSidebar = !appState.showSidebar} title="Lista">‹</button>
       <button class="icon-btn" class:on={appState.showEditor}
         onclick={() => appState.showEditor = !appState.showEditor} title="Redigera">✎</button>
       <button class="icon-btn" class:on={appState.showAgenda}
-        onclick={() => appState.showAgenda = !appState.showAgenda} title="Agenda">☰</button>
+        onclick={() => appState.showAgenda = !appState.showAgenda} title="Agenda">›</button>
     </div>
   </div>
   {#if appState.showAgenda}<Agenda />{/if}
