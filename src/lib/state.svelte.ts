@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import type { AppState, Block, Palette, ClockMode } from './types';
 import { parseSource } from './parse';
 
@@ -16,38 +17,45 @@ Arbetspass 45m
 #Lunch 12:00
 `;
 
-function load(): Partial<AppState> {
+function loadSaved(): Partial<AppState> {
+  if (!browser) return {};
   try { return JSON.parse(localStorage.getItem(KEY) ?? '{}'); }
   catch { return {}; }
 }
 
-function createState() {
-  const saved = load();
-  let palette    = $state<Palette>(saved.palette ?? 'sansad');
-  let dark       = $state<boolean>(saved.dark ?? false);
-  let source     = $state<string>(saved.source ?? DEFAULT_SOURCE);
-  let clockMode  = $state<ClockMode>(saved.clockMode ?? '1h');
-  let showSidebar = $state<boolean>(saved.showSidebar ?? true);
-  let showAgenda  = $state<boolean>(saved.showAgenda ?? true);
-  let showEditor  = $state<boolean>(saved.showEditor ?? false);
-  let blocks = $derived<Block[]>(parseSource(source));
+class State {
+  palette    = $state<Palette>('sansad');
+  dark       = $state<boolean>(false);
+  source     = $state<string>(DEFAULT_SOURCE);
+  clockMode  = $state<ClockMode>('1h');
+  showSidebar = $state<boolean>(true);
+  showAgenda  = $state<boolean>(true);
+  showEditor  = $state<boolean>(false);
+  blocks      = $derived<Block[]>(parseSource(this.source));
 
-  $effect(() => {
-    localStorage.setItem(KEY, JSON.stringify({
-      palette, dark, source, clockMode, showSidebar, showAgenda, showEditor
-    }));
-  });
+  constructor() {
+    const saved = loadSaved();
+    if (saved.palette)     this.palette     = saved.palette;
+    if (saved.dark != null) this.dark       = saved.dark;
+    if (saved.source)      this.source      = saved.source;
+    if (saved.clockMode)   this.clockMode   = saved.clockMode;
+    if (saved.showSidebar != null) this.showSidebar = saved.showSidebar;
+    if (saved.showAgenda  != null) this.showAgenda  = saved.showAgenda;
+    if (saved.showEditor  != null) this.showEditor  = saved.showEditor;
 
-  return {
-    get palette()     { return palette; },     set palette(v)     { palette = v; },
-    get dark()        { return dark; },         set dark(v)        { dark = v; },
-    get source()      { return source; },       set source(v)      { source = v; },
-    get clockMode()   { return clockMode; },    set clockMode(v)   { clockMode = v; },
-    get showSidebar() { return showSidebar; },  set showSidebar(v) { showSidebar = v; },
-    get showAgenda()  { return showAgenda; },   set showAgenda(v)  { showAgenda = v; },
-    get showEditor()  { return showEditor; },   set showEditor(v)  { showEditor = v; },
-    get blocks()      { return blocks; },
-  };
+    $effect(() => {
+      if (!browser) return;
+      localStorage.setItem(KEY, JSON.stringify({
+        palette: this.palette,
+        dark: this.dark,
+        source: this.source,
+        clockMode: this.clockMode,
+        showSidebar: this.showSidebar,
+        showAgenda: this.showAgenda,
+        showEditor: this.showEditor,
+      }));
+    });
+  }
 }
 
-export const appState = createState();
+export const appState = new State();
