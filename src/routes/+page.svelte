@@ -20,12 +20,9 @@
   <div class="center">
     <Clock />
     <div class="toolbar">
-      <button class="icon-btn" class:on={appState.showSidebar}
-        onclick={() => appState.showSidebar = !appState.showSidebar} title="Lista">‹</button>
-      <button class="icon-btn" class:on={appState.showEditor}
-        onclick={() => appState.showEditor = !appState.showEditor} title="Redigera">✎</button>
-      <button class="icon-btn" class:on={appState.showAgenda}
-        onclick={() => appState.showAgenda = !appState.showAgenda} title="Agenda">›</button>
+      <button class="icon" onclick={() => appState.showSidebar = !appState.showSidebar} title="Lista">⚙︎</button>
+      <button class="icon" onclick={() => appState.showEditor  = !appState.showEditor}  title="Redigera">⚒︎</button>
+      <button class="icon" onclick={() => appState.showAgenda  = !appState.showAgenda}  title="Agenda">ⓘ</button>
     </div>
   </div>
   {#if appState.showAgenda}<Agenda />{/if}
@@ -55,25 +52,27 @@
     display: flex; align-items: center; gap: 8px;
     background: transparent; border: 0;
     border-radius: 999px; padding: 4px 6px;
+    position: relative;
     opacity: 0.55; transition: opacity .2s;
   }
   .toolbar:hover { opacity: 1; }
-  .icon-btn {
+  .toolbar .icon {
     background: transparent; border: 0; color: var(--muted);
     cursor: pointer; font-size: 16px; padding: 4px 8px;
     border-radius: 999px;
+    font-family: "Segoe UI Symbol", "Apple Symbols", system-ui, sans-serif;
+    font-variant-emoji: text;
   }
-  .icon-btn:hover { background: var(--pill); color: var(--fg); }
-  .icon-btn.on { background: var(--pill); color: var(--fg); }
+  .toolbar .icon:hover { background: var(--pill); color: var(--fg); }
 
   .theme-dots {
     position: fixed; top: 10px; right: 10px;
-    display: flex; align-items: center; gap: 6px; z-index: 55;
+    display: flex; align-items: center; gap: 7px; z-index: 55;
   }
   .theme-dot {
     width: 9px; height: 9px; border-radius: 50%;
     border: none; cursor: pointer; opacity: 0.3;
-    transition: opacity 0.15s;
+    transition: opacity .2s;
   }
   .theme-dot:hover { opacity: 0.7; }
   .theme-dot.active { opacity: 0.9; }
