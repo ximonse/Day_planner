@@ -41,9 +41,8 @@
       onclick={() => appState.palette = (p as Palette)}
     ></button>
   {/each}
-  <button class="dark-toggle" onclick={() => appState.dark = !appState.dark} title="Dag/Natt">
-    {appState.dark ? '☾' : '☀'}
-  </button>
+  <button class="dark-toggle" class:active={appState.dark}
+    onclick={() => appState.dark = !appState.dark} title="Dag/Natt"></button>
 </div>
 
 <style>
@@ -51,33 +50,36 @@
   .center { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:24px; gap:8px; }
 
   .toolbar {
-    display: flex; gap: 6px; justify-content: center;
-    opacity: 0.25; transition: opacity 0.2s;
+    display: flex; align-items: center; gap: 8px;
+    background: transparent; border: 0;
+    border-radius: 999px; padding: 4px 6px;
+    opacity: 0.55; transition: opacity .2s;
   }
   .toolbar:hover { opacity: 1; }
   .icon-btn {
-    background: none; border: none; cursor: pointer;
-    font-size: 1.1rem; color: var(--fg); padding: 4px 8px;
-    border-radius: 6px;
+    background: transparent; border: 0; color: var(--muted);
+    cursor: pointer; font-size: 16px; padding: 4px 8px;
+    border-radius: 999px;
   }
-  .icon-btn:hover { background: var(--pill); }
-  .icon-btn.on { background: var(--pill); opacity: 1; }
+  .icon-btn:hover { background: var(--pill); color: var(--fg); }
+  .icon-btn.on { background: var(--pill); color: var(--fg); }
 
   .theme-dots {
-    position: fixed; bottom: 16px; right: 16px;
-    display: flex; align-items: center; gap: 6px; z-index: 20;
+    position: fixed; top: 10px; right: 10px;
+    display: flex; align-items: center; gap: 6px; z-index: 55;
   }
   .theme-dot {
-    width: 18px; height: 18px; border-radius: 50%;
-    border: none; cursor: pointer; opacity: 0.45;
+    width: 9px; height: 9px; border-radius: 50%;
+    border: none; cursor: pointer; opacity: 0.3;
     transition: opacity 0.15s;
   }
-  .theme-dot:hover { opacity: 0.8; }
-  .theme-dot.active { opacity: 1; box-shadow: 0 0 0 2px var(--fg); }
+  .theme-dot:hover { opacity: 0.7; }
+  .theme-dot.active { opacity: 0.9; }
   .dark-toggle {
-    background: none; border: none; cursor: pointer;
-    font-size: 1rem; color: var(--fg); opacity: 0.5;
-    padding: 2px 4px;
+    width: 14px; height: 9px; border-radius: 5px; border: 0; padding: 0;
+    background: var(--fg); opacity: 0.2; cursor: pointer;
+    transition: opacity .2s;
   }
-  .dark-toggle:hover { opacity: 1; }
+  .dark-toggle:hover { opacity: 0.6; }
+  .dark-toggle.active { opacity: 0.55; }
 </style>
